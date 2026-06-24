@@ -6,21 +6,34 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "setup:account": "tsx scripts/setup-account.mts",
+    "wallet:new": "tsx scripts/new-wallet.mts",
+    "seed": "tsx scripts/seed.mts",
+    "smoke": "tsx scripts/smoke-memory.mts"
   },
   "dependencies": {
+    "@ai-sdk/openai-compatible": "^2.0.51",
+    "@mysten-incubation/memwal": "^0.0.7",
+    "@mysten/seal": "^1.2.2",
+    "@mysten/sui": "^2.20.0",
+    "@mysten/walrus": "^1.2.2",
+    "ai": "^6.0.208",
     "next": "16.2.9",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv": "^17.4.2",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
     "tailwindcss": "^4",
+    "tsx": "^4.22.4",
     "typescript": "^5"
   }
 }
