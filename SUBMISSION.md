@@ -5,7 +5,7 @@
 ## Setup links
 - **Deployed agent (live on Walrus Mainnet):** ‹vercel-url›
 - **MemWalAccount on explorer (holds the memories):** ‹suiscan-mainnet-object-url› (auto-shown in the app header → "on-chain account")
-- **Public repo:** ‹github-url›
+- **Public repo:** https://github.com/Nuel-osas/gaffer-walrus
 
 ## How Walrus Memory is used (2–5 sentences)
 Every prediction, opinion, and reaction a user gives GAFFER is written to Walrus Memory via `rememberAndWait`, tagged with the date it was made, and scoped to a per-user namespace. When the user talks to GAFFER, it runs a semantic `recall` over that namespace and injects the most relevant past takes into the model prompt — so the agent quotes your earlier calls back at you and holds you to them. A "football brain" profile reads the full memory and surfaces biases and the predictions you're now on the hook for. Because the takes live as Walrus blobs owned by an on-chain MemWalAccount, they're permanent and verifiable: the agent has receipts you cannot quietly delete, which is the whole point of the experience.

@@ -5,6 +5,9 @@ import { getTakes, type TakesPayload, type Receipt } from "@/app/actions";
 import Composer from "./Composer";
 import Chat from "./Chat";
 import Record from "./Record";
+import Feed from "./Feed";
+
+type Tab = "feed" | "coach" | "record";
 
 interface Props {
   provisioned: boolean;
@@ -18,6 +21,7 @@ export default function Gaffer({ provisioned, hasModel, accountUrl, network }: P
   const [draft, setDraft] = useState("");
   const [data, setData] = useState<TakesPayload | null>(null);
   const [toast, setToast] = useState<Receipt | null>(null);
+  const [tab, setTab] = useState<Tab>("feed");
 
   useEffect(() => {
     const saved = typeof window !== "undefined" ? localStorage.getItem("gaffer:handle") : null;
@@ -88,13 +92,36 @@ export default function Gaffer({ provisioned, hasModel, accountUrl, network }: P
         </div>
       )}
 
-      <div className="grid flex-1 grid-cols-1 gap-5 lg:grid-cols-[1.35fr_1fr]">
-        <div className="flex min-h-0 flex-col gap-5">
+      <nav className="mb-4 flex gap-1.5">
+        <TabButton active={tab === "feed"} onClick={() => setTab("feed")}>
+          ⚽ Matches
+        </TabButton>
+        <TabButton active={tab === "coach"} onClick={() => setTab("coach")}>
+          💬 Talk to GAFFER
+        </TabButton>
+        <TabButton active={tab === "record"} onClick={() => setTab("record")}>
+          🧠 Your record{data ? ` (${data.takes.length})` : ""}
+        </TabButton>
+      </nav>
+
+      {tab === "feed" && (
+        <div className="mx-auto flex w-full max-w-xl min-h-0 flex-1 flex-col">
+          <Feed handle={handle} takes={data?.takes ?? []} onReload={reload} />
+        </div>
+      )}
+
+      {tab === "coach" && (
+        <div className="mx-auto flex w-full max-w-2xl min-h-0 flex-1 flex-col gap-5">
           <Composer handle={handle} onLogged={onLogged} />
           <Chat handle={handle} hasModel={hasModel} onActivity={reload} />
         </div>
-        <Record data={data} handle={handle} hasModel={hasModel} onReload={reload} />
-      </div>
+      )}
+
+      {tab === "record" && (
+        <div className="mx-auto w-full max-w-2xl">
+          <Record data={data} handle={handle} hasModel={hasModel} onReload={reload} />
+        </div>
+      )}
 
       {toast && <ReceiptToast receipt={toast} onClose={() => setToast(null)} />}
     </div>
@@ -229,6 +256,29 @@ function ReceiptToast({ receipt, onClose }: { receipt: Receipt; onClose: () => v
         walrus blob {receipt.blobId.slice(0, 16)}… ↗
       </a>
     </div>
+  );
+}
+
+function TabButton({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`rounded-xl border px-3.5 py-2 text-sm font-bold transition ${
+        active
+          ? "border-[var(--lime)] bg-[var(--lime)] text-black"
+          : "border-[var(--border)] bg-[var(--panel)] text-[var(--muted)] hover:text-white"
+      }`}
+    >
+      {children}
+    </button>
   );
 }
 

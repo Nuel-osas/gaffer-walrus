@@ -80,7 +80,7 @@ export interface ScorecardStats {
 }
 
 // World Cup 2026 nations + a few aliases, for lightweight bias detection.
-const TEAMS: Record<string, string[]> = {
+export const TEAMS: Record<string, string[]> = {
   Argentina: ["argentina", "albiceleste", "messi"],
   Brazil: ["brazil", "brasil", "seleção", "vini", "vinicius", "neymar"],
   France: ["france", "les bleus", "mbappe", "mbappé"],
@@ -98,6 +98,24 @@ const TEAMS: Record<string, string[]> = {
   Uruguay: ["uruguay", "la celeste"],
   Japan: ["japan", "samurai blue"],
 };
+
+/** Lowercase match terms for a team name (its aliases, or the name itself). */
+export function teamAliases(name: string): string[] {
+  return TEAMS[name] ?? [name.toLowerCase()];
+}
+
+/** Takes that mention either side of a fixture (by team name/alias). */
+export function takesForTeams(
+  takes: ParsedTake[],
+  teamA: string,
+  teamB: string,
+): ParsedTake[] {
+  const terms = [...teamAliases(teamA), ...teamAliases(teamB)];
+  return takes.filter((t) => {
+    const hay = `${t.text} ${t.fixture ?? ""}`.toLowerCase();
+    return terms.some((term) => hay.includes(term));
+  });
+}
 
 export function computeStats(takes: ParsedTake[]): ScorecardStats {
   const byKind: Record<TakeKind, number> = {
